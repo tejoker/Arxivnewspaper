@@ -1,0 +1,156 @@
+:root {
+    --text-primary: #1a1a1a;
+    --text-secondary: #555;
+    --bg-color: #f9f9f7;
+    /* Off-white paper color */
+    --accent: #2c3e50;
+    --border-color: #e0e0e0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: 'Source Serif Pro', serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+header {
+    border-bottom: 4px double var(--text-primary);
+    padding: 2rem 0 1rem;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.newspaper-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: -2px;
+}
+
+.meta-bar {
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    margin-top: 1rem;
+    padding: 0.5rem 0;
+    display: flex;
+    justify-content: space-between;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.stats-bar {
+    text-align: center;
+    padding: 0.5rem 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.stats-label {
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+.stat-item {
+    margin: 0 0.5rem;
+    white-space: nowrap;
+}
+
+main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.topic-section {
+    margin-bottom: 4rem;
+}
+
+.section-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid var(--text-primary);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.papers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.paper-card {
+    background: #fff;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s;
+}
+
+.paper-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.paper-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    margin-top: 0;
+    line-height: 1.2;
+}
+
+.paper-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.paper-title a:hover {
+    text-decoration: underline;
+}
+
+.paper-meta {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.paper-abstract {
+    font-size: 0.95rem;
+    color: #444;
+}
+
+.tags {
+    margin-top: 1rem;
+}
+
+.tag {
+    background: #eee;
+    padding: 2px 6px;
+    font-size: 0.75rem;
+    font-family: 'Inter', sans-serif;
+    border-radius: 4px;
+}
+
+footer {
+    text-align: center;
+    padding: 2rem;
+    margin-top: 4rem;
+    border-top: 1px solid var(--border-color);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+}

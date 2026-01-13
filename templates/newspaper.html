@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Daily Arxiv - {{ date }}</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+Pro:wght@400;600&family=Inter:wght@400;500&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <h1 class="newspaper-title">The Daily Arxiv</h1>
+            <div class="meta-bar">
+                <span class="date">{{ date }}</span>
+                <span class="edition">Computer Science Edition • {{ total_papers }} Papers</span>
+            </div>
+
+            {% if cat_stats %}
+            <div class="stats-bar">
+                <span class="stats-label">Top Categories:</span>
+                {% for cat, count in cat_stats %}
+                <span class="stat-item">{{ cat }} ({{ count }})</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </header>
+
+    <main>
+        {% if not sections %}
+        <div class="no-papers">
+            <p>No papers found for this date. Go touch grass!</p>
+        </div>
+        {% else %}
+        {% for cluster_id, papers in sections.items() %}
+        <section class="topic-section">
+            <h2 class="section-title">
+                {% if section_labels and section_labels[cluster_id] %}
+                Topic: {{ section_labels[cluster_id] }}
+                {% else %}
+                Topic Cluster {{ loop.index }}
+                {% endif %}
+            </h2>
+            <div class="papers-grid">
+                {% for paper in papers %}
+                <article class="paper-card">
+                    <h3 class="paper-title"><a href="{{ paper.link }}" target="_blank">{{ paper.title }}</a></h3>
+                    <div class="paper-meta">
+                        <span class="authors">{{ paper.authors }}</span>
+                    </div>
+                    <p class="paper-abstract">{{ paper.abstract[:300] }}...</p>
+                    <div class="tags">
+                        <span class="tag">{{ paper.categories }}</span>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+        {% endfor %}
+        {% endif %}
+    </main>
+
+    {% if benchmarks %}
+    <section class="benchmarks-section" style="max-width: 1000px; margin: 4rem auto 0; padding: 0 1rem;">
+        <h2 class="section-title">Benchmark Competitors & Filiation</h2>
+        <div class="benchmark-grid"
+            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 2rem;">
+            {% for name, papers in benchmarks.items() %}
+            <div class="benchmark-card"
+                style="background: #fff; padding: 1.5rem; border: 1px solid var(--border-color); box-shadow: 2px 2px 0 rgba(0,0,0,0.05);">
+                <h3
+                    style="margin-top: 0; font-family: 'Inter', sans-serif; font-size: 1.1rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; margin-bottom: 1rem;">
+                    Evaluated on: <span
+                        style="background: #e1f5fe; padding: 2px 6px; border-radius: 4px; color: #0277bd;">{{ name
+                        }}</span>
+                </h3>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    {% for p in papers %}
+                    <li style="margin-bottom: 0.8rem; border-left: 3px solid #ddd; padding-left: 0.8rem;">
+                        <a href="{{ p.link }}" target="_blank"
+                            style="text-decoration: none; color: inherit; font-weight: 500;">{{ p.title }}</a>
+                        <div style="font-size: 0.8rem; color: #666; margin-top: 0.2rem;">{{ p.authors[:50] }}...</div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if filiations %}
+    <section class="filiation-section"
+        style="max-width: 1000px; margin: 4rem auto 0; padding: 0 1rem; border-top: 5px solid var(--accent-color);">
+        <h2 class="section-title">Common Ancestors & Filiation Graph</h2>
+        <p style="text-align: center; color: #666; font-style: italic; margin-bottom: 2rem;">
+            Papers in this edition that build upon the same foundational work.
+        </p>
+        <div class="filiation-grid"
+            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 2rem;">
+            {% for name, papers in filiations.items() %}
+            <div class="filiation-card"
+                style="background: #fffcf5; padding: 1.5rem; border: 1px solid #e0d0b0; box-shadow: 2px 2px 0 rgba(0,0,0,0.05);">
+                <h3
+                    style="margin-top: 0; font-family: 'Inter', sans-serif; font-size: 1.1rem; border-bottom: 2px solid #e0d0b0; padding-bottom: 0.5rem; margin-bottom: 1rem;">
+                    Descendants of: <br><span style="color: #8d6e63; font-weight: 700;">{{ name }}</span>
+                </h3>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    {% for p in papers %}
+                    <li style="margin-bottom: 0.8rem; border-left: 3px solid #8d6e63; padding-left: 0.8rem;">
+                        <a href="{{ p.link }}" target="_blank"
+                            style="text-decoration: none; color: inherit; font-weight: 500;">{{ p.title }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+    {% if graph_data %}
+    <section class="graph-section" style="max-width: 1200px; margin: 4rem auto; padding: 0 1rem;">
+        <h2 class="section-title">The Constellation (Filiation & Benchmarks)</h2>
+        <div id="mynetwork" style="width: 100%; height: 600px; border: 1px solid lightgray; background: #fdfdfd;"></div>
+        <script type="text/javascript">
+            // Get data from Flask/Jinja
+            var graphData = {{ graph_data | tojson | safe }};
+
+            var nodes = new vis.DataSet(graphData.nodes);
+            var edges = new vis.DataSet(graphData.edges);
+            var parsedData = { nodes: nodes, edges: edges };
+
+            var container = document.getElementById('mynetwork');
+            var options = {
+                nodes: {
+                    shape: 'dot',
+                    size: 16,
+                    font: { size: 14, face: 'Inter' },
+                    borderWidth: 2
+                },
+                edges: {
+                    width: 1,
+                    smooth: { type: 'continuous' }
+                },
+                physics: {
+                    stabilization: false,
+                    barnesHut: {
+                        gravitationalConstant: -2000,
+                        springConstant: 0.04,
+                        springLength: 95
+                    }
+                },
+                interaction: {
+                    tooltipDelay: 200,
+                    zoomView: true
+                }
+            };
+
+            var network = new vis.Network(container, parsedData, options);
+
+            // Add click interaction
+            network.on("click", function (params) {
+                if (params.nodes.length > 0) {
+                    var nodeId = params.nodes[0];
+                    // If node is a paper (starts with Arxiv ID pattern approx or has link)
+                    // We simply log for now, or could scroll to paper
+                }
+            });
+        </script>
+    </section>
+    {% endif %}
+
+    <footer>
+        <p>Generated by Journarixv | <a href="#">Local & Free</a></p>
+    </footer>
+</body>
+
+</html>

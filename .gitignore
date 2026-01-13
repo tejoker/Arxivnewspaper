@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Data
+*.json
+*.json.gz
+*.db
+*.csv
+*.sqlite
+
+# Output
+output/
+!output/math_stat_atlas.png
+
+
+# Logs
+*.log

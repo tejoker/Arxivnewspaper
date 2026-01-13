@@ -47,3 +47,6 @@ The generated SVG atlas can be very large. To generate a lighter PNG version for
 python render_atlas.py
 ```
 This will create `output/math_stat_atlas.png`.
+
+
+PS In math_stat_atlas.png the green dots are physics, I am currently limited by my laptop CPU to render the atlas. that is why most of the citations/benchmarks are missing.
